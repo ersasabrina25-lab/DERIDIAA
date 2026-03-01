@@ -1,2 +1,1589 @@
 # DERIDIAA
 Deteksi Dini Risiko Diabetes - Media Monitoring dan Edukasi
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DERIDIA – Deteksi Dini Risiko Diabetes</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --primary: #0f5e4e;
+    --primary-light: #1a8a72;
+    --primary-pale: #e8f5f2;
+    --accent: #f4a62a;
+    --accent-light: #fef3dc;
+    --danger: #e53e3e;
+    --warn: #dd6b20;
+    --safe: #38a169;
+    --bg: #f8faf9;
+    --white: #ffffff;
+    --text: #1a2e2a;
+    --text-muted: #5a7a72;
+    --border: #d4e8e2;
+    --card-shadow: 0 4px 24px rgba(15,94,78,0.08);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* ===== ANIMATED SVG ICONS ===== */
+  /* Heartbeat pulse */
+  @keyframes heartbeat {
+    0%,100% { transform: scale(1); }
+    14% { transform: scale(1.18); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.12); }
+    56% { transform: scale(1); }
+  }
+  @keyframes pulse-ring {
+    0% { r: 18; opacity: 0.6; }
+    100% { r: 30; opacity: 0; }
+  }
+  @keyframes ecg-draw {
+    0% { stroke-dashoffset: 300; }
+    100% { stroke-dashoffset: 0; }
+  }
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  @keyframes spin-ccw {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(-360deg); }
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0px); }
+    50% { transform: translateY(-6px); }
+  }
+  @keyframes bounce-in {
+    0% { transform: scale(0); opacity: 0; }
+    60% { transform: scale(1.15); opacity: 1; }
+    100% { transform: scale(1); }
+  }
+  @keyframes dash-anim {
+    to { stroke-dashoffset: 0; }
+  }
+  @keyframes blink {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  @keyframes draw-circle {
+    from { stroke-dashoffset: 157; }
+    to { stroke-dashoffset: 0; }
+  }
+  @keyframes shake {
+    0%,100% { transform: rotate(0deg); }
+    20% { transform: rotate(-8deg); }
+    40% { transform: rotate(8deg); }
+    60% { transform: rotate(-5deg); }
+    80% { transform: rotate(5deg); }
+  }
+  @keyframes grow-shrink {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+  }
+  @keyframes wave {
+    0%,100% { transform: scaleY(1); }
+    50% { transform: scaleY(1.6); }
+  }
+  @keyframes orbit {
+    from { transform: rotate(0deg) translateX(14px) rotate(0deg); }
+    to   { transform: rotate(360deg) translateX(14px) rotate(-360deg); }
+  }
+  @keyframes fadeInUp {
+    from { opacity:0; transform:translateY(20px); }
+    to { opacity:1; transform:none; }
+  }
+  @keyframes slideInLeft {
+    from { opacity:0; transform:translateX(-30px); }
+    to { opacity:1; transform:none; }
+  }
+  @keyframes glow-pulse {
+    0%,100% { filter: drop-shadow(0 0 4px rgba(15,94,78,0.3)); }
+    50% { filter: drop-shadow(0 0 12px rgba(15,94,78,0.6)); }
+  }
+  @keyframes needle-sweep {
+    0% { transform: rotate(-90deg); }
+    60% { transform: rotate(20deg); }
+    80% { transform: rotate(10deg); }
+    100% { transform: rotate(15deg); }
+  }
+  @keyframes fill-bar {
+    from { width: 0%; }
+    to { width: 100%; }
+  }
+  @keyframes count-up {
+    from { opacity:0; transform: translateY(10px); }
+    to { opacity:1; transform: none; }
+  }
+  @keyframes drop {
+    0% { transform: translateY(-10px); opacity:0; }
+    60% { transform: translateY(4px); opacity:1; }
+    100% { transform: translateY(0); opacity:1; }
+  }
+  @keyframes ripple {
+    0% { transform: scale(0.8); opacity:1; }
+    100% { transform: scale(2.2); opacity:0; }
+  }
+  @keyframes rotate-gear {
+    from { transform-origin: center; transform: rotate(0deg); }
+    to { transform-origin: center; transform: rotate(360deg); }
+  }
+  @keyframes magnify {
+    0%,100% { transform: scale(1) rotate(-5deg); }
+    50% { transform: scale(1.1) rotate(5deg); }
+  }
+  @keyframes bar-grow {
+    from { transform: scaleY(0); transform-origin: bottom; }
+    to { transform: scaleY(1); transform-origin: bottom; }
+  }
+  @keyframes type-cursor {
+    0%,100% { opacity:1; }
+    50% { opacity:0; }
+  }
+  @keyframes printer-head {
+    0%,100% { transform: translateX(0); }
+    50% { transform: translateX(14px); }
+  }
+  @keyframes paper-out {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(6px); }
+  }
+
+  .icon-heartbeat { animation: heartbeat 2s ease-in-out infinite; }
+  .icon-float { animation: float 3s ease-in-out infinite; }
+  .icon-spin { animation: spin-slow 4s linear infinite; }
+  .icon-spin-ccw { animation: spin-ccw 6s linear infinite; }
+  .icon-bounce { animation: bounce-in 0.6s cubic-bezier(.36,.07,.19,.97); }
+  .icon-shake { animation: shake 1.5s ease-in-out infinite; }
+  .icon-grow { animation: grow-shrink 2s ease-in-out infinite; }
+  .icon-glow { animation: glow-pulse 2s ease-in-out infinite; }
+
+  .svg-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+
+  /* ===== NAVBAR ===== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+    background: rgba(248,250,249,0.95);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px; height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'DM Serif Display', serif; font-size: 1.4rem;
+    color: var(--primary); cursor: pointer;
+  }
+  .nav-logo-icon {
+    width: 38px; height: 38px; background: var(--primary);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  }
+  .nav-links { display: flex; gap: 4px; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--text-muted); font-size: 0.9rem;
+    font-weight: 500; padding: 8px 14px; border-radius: 8px;
+    transition: all 0.2s; cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .nav-links a:hover, .nav-links a.active { background: var(--primary-pale); color: var(--primary); }
+  .nav-cta { background: var(--primary); color: white !important; padding: 8px 20px !important; border-radius: 8px !important; }
+  .nav-cta:hover { background: var(--primary-light) !important; color: white !important; }
+
+  /* ===== PAGES ===== */
+  .page { display: none; padding-top: 64px; }
+  .page.active { display: block; }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: calc(100vh - 64px);
+    display: flex; align-items: center;
+    position: relative; overflow: hidden; padding: 60px 24px;
+  }
+  .hero-bg { position: absolute; inset: 0; background: linear-gradient(135deg, #e8f5f2 0%, #f8faf9 50%, #fef3dc 100%); }
+  .hero-circles { position: absolute; inset: 0; pointer-events: none; }
+  .hero-circles div { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(15,94,78,0.07) 0%, transparent 70%); }
+  .hero-circles .c1 { width: 500px; height: 500px; top: -100px; right: -100px; }
+  .hero-circles .c2 { width: 300px; height: 300px; bottom: 0; left: -50px; }
+  .hero-content {
+    position: relative; max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--primary-pale); border: 1px solid var(--border);
+    color: var(--primary); padding: 6px 14px; border-radius: 100px;
+    font-size: 0.78rem; font-weight: 600; margin-bottom: 20px;
+    letter-spacing: 0.5px; text-transform: uppercase;
+    animation: fadeInUp 0.6s ease both;
+  }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.2rem, 4vw, 3.2rem); line-height: 1.15;
+    color: var(--text); margin-bottom: 20px;
+    animation: fadeInUp 0.6s 0.1s ease both;
+  }
+  .hero h1 em { color: var(--primary); font-style: italic; }
+  .hero p { color: var(--text-muted); font-size: 1rem; line-height: 1.7; margin-bottom: 36px; animation: fadeInUp 0.6s 0.2s ease both; }
+  .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; animation: fadeInUp 0.6s 0.3s ease both; }
+  .btn-primary {
+    background: var(--primary); color: white; border: none;
+    padding: 14px 28px; border-radius: 12px;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.95rem; font-weight: 600;
+    cursor: pointer; transition: all 0.25s;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .btn-primary:hover { background: var(--primary-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(15,94,78,0.25); }
+  .btn-outline {
+    background: transparent; border: 1.5px solid var(--border);
+    color: var(--text); padding: 14px 28px; border-radius: 12px;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.95rem; font-weight: 600;
+    cursor: pointer; transition: all 0.25s; display: flex; align-items: center; gap: 10px;
+  }
+  .btn-outline:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-pale); }
+  .hero-stats { display: flex; gap: 24px; margin-top: 48px; animation: fadeInUp 0.6s 0.4s ease both; }
+  .stat-item { text-align: left; }
+  .stat-num { font-family: 'DM Serif Display', serif; font-size: 2rem; color: var(--primary); line-height: 1; }
+  .stat-label { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
+
+  .hero-visual { position: relative; animation: fadeInUp 0.8s 0.2s ease both; }
+  .hero-card-main {
+    background: white; border-radius: 20px; padding: 28px;
+    box-shadow: 0 20px 60px rgba(15,94,78,0.12); position: relative; z-index: 2;
+  }
+  .risk-meter { margin: 20px 0; }
+  .risk-bar {
+    height: 12px; border-radius: 100px;
+    background: linear-gradient(to right, #38a169, #f4a62a, #e53e3e);
+    position: relative; margin-bottom: 8px;
+  }
+  .risk-indicator {
+    width: 20px; height: 20px; background: white; border: 3px solid var(--primary);
+    border-radius: 50%; position: absolute; top: -4px; transform: translateX(-50%);
+    transition: left 1s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .mini-card {
+    position: absolute; background: white; border-radius: 14px;
+    padding: 14px 18px; box-shadow: 0 8px 30px rgba(15,94,78,0.12);
+    display: flex; align-items: center; gap: 12px;
+    font-size: 0.82rem; font-weight: 600; z-index: 3;
+  }
+  .mini-card .ic {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mini-card.mc1 { bottom: -20px; left: -30px; animation: float 3.5s ease-in-out infinite; }
+  .mini-card.mc2 { top: -20px; right: -30px; animation: float 2.8s 0.5s ease-in-out infinite; }
+
+  /* ===== SECTIONS ===== */
+  section { padding: 80px 24px; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+  .section-label { font-size: 0.78rem; font-weight: 700; color: var(--primary); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; }
+  .section-title { font-family: 'DM Serif Display', serif; font-size: clamp(1.8rem, 3vw, 2.4rem); margin-bottom: 16px; line-height: 1.2; }
+  .section-desc { color: var(--text-muted); font-size: 1rem; line-height: 1.7; max-width: 560px; }
+
+  /* ===== FEATURE CARDS ===== */
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 20px; margin-top: 48px; }
+  .feat-card {
+    background: white; border-radius: var(--radius); padding: 28px;
+    border: 1px solid var(--border); transition: all 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .feat-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--primary); transform: scaleX(0); transition: transform 0.3s; transform-origin: left;
+  }
+  .feat-card:hover { transform: translateY(-5px); box-shadow: 0 12px 36px rgba(15,94,78,0.12); }
+  .feat-card:hover::before { transform: scaleX(1); }
+  .feat-icon-wrap {
+    width: 60px; height: 60px; border-radius: 16px;
+    background: var(--primary-pale); display: flex; align-items: center; justify-content: center;
+    margin-bottom: 18px; transition: all 0.3s;
+  }
+  .feat-card:hover .feat-icon-wrap { background: var(--primary); }
+  .feat-card:hover .feat-icon-wrap svg [data-hover-color] { stroke: white !important; fill: white !important; }
+  .feat-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+  .feat-card p { color: var(--text-muted); font-size: 0.88rem; line-height: 1.6; }
+
+  /* ===== STEPS ===== */
+  .steps { display: flex; flex-direction: column; gap: 0; margin-top: 48px; }
+  .step { display: flex; gap: 24px; align-items: flex-start; padding: 24px 0; position: relative; }
+  .step:not(:last-child)::after { content: ''; position: absolute; left: 23px; top: 64px; bottom: 0; width: 2px; background: var(--border); }
+  .step-num {
+    width: 48px; height: 48px; border-radius: 50%; background: var(--primary); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 1.1rem; flex-shrink: 0; position: relative; z-index: 1;
+  }
+  .step-icon { width: 48px; height: 48px; border-radius: 14px; background: var(--primary-pale); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .step-content h3 { font-weight: 700; margin-bottom: 6px; }
+  .step-content p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
+
+  /* ===== SCREENING ===== */
+  .screening-wrap { max-width: 760px; margin: 0 auto; padding: 40px 24px 80px; }
+  .screening-header { text-align: center; margin-bottom: 40px; }
+  .progress-wrap { margin-bottom: 32px; }
+  .progress-steps {
+    display: flex; justify-content: space-between; margin-bottom: 8px;
+    position: relative;
+  }
+  .progress-steps::before {
+    content: ''; position: absolute; top: 16px; left: 16px; right: 16px; height: 2px;
+    background: var(--border); z-index: 0;
+  }
+  .progress-step-item { display: flex; flex-direction: column; align-items: center; gap: 6px; z-index: 1; }
+  .ps-dot {
+    width: 32px; height: 32px; border-radius: 50%; background: var(--border);
+    color: var(--text-muted); display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.8rem; transition: all 0.3s;
+  }
+  .ps-dot.done { background: var(--primary); color: white; }
+  .ps-dot.active { background: var(--accent); color: white; }
+
+  .question-card {
+    background: white; border-radius: var(--radius); padding: 32px;
+    box-shadow: var(--card-shadow); border: 1px solid var(--border);
+    animation: fadeInUp 0.3s ease;
+  }
+  .q-num { font-size: 0.78rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+  .q-text { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; line-height: 1.4; }
+  .q-hint { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; display: flex; align-items: flex-start; gap: 6px; }
+  .options-grid { display: flex; flex-direction: column; gap: 10px; }
+  .opt-btn {
+    display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-radius: 12px;
+    border: 1.5px solid var(--border); background: white; cursor: pointer;
+    transition: all 0.2s; text-align: left;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.92rem; font-weight: 500; color: var(--text);
+  }
+  .opt-btn:hover { border-color: var(--primary); background: var(--primary-pale); }
+  .opt-btn.selected { border-color: var(--primary); background: var(--primary-pale); color: var(--primary); font-weight: 600; }
+  .opt-radio {
+    width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border);
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+  }
+  .opt-btn.selected .opt-radio { border-color: var(--primary); background: var(--primary); }
+  .opt-btn.selected .opt-radio::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: white; }
+  .opt-score { margin-left: auto; font-size: 0.75rem; color: var(--text-muted); font-weight: 600; white-space: nowrap; }
+  .q-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 28px; }
+
+  /* ===== HASIL ===== */
+  .result-card {
+    background: white; border-radius: var(--radius); padding: 36px;
+    box-shadow: var(--card-shadow); border: 1px solid var(--border); text-align: center;
+  }
+  .result-score-ring { width: 150px; height: 150px; margin: 0 auto 24px; position: relative; }
+  .result-score-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .score-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  .score-num-big { font-family: 'DM Serif Display', serif; font-size: 2.4rem; color: var(--primary); line-height: 1; display: block; }
+  .score-max { font-size: 0.85rem; color: var(--text-muted); }
+  .result-badge { display: inline-block; padding: 6px 20px; border-radius: 100px; font-weight: 700; font-size: 0.95rem; margin: 12px auto 8px; }
+  .badge-low { background: #e6f7ee; color: #2f855a; }
+  .badge-moderate { background: #fef3dc; color: #c05621; }
+  .badge-high { background: #fff5f5; color: #c53030; }
+  .badge-veryhigh { background: #ffe4e6; color: #9b1c1c; }
+  .result-desc { color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; margin: 12px 0 28px; }
+  .rekom-list { text-align: left; margin-top: 24px; }
+  .rekom-item {
+    display: flex; gap: 14px; align-items: flex-start; padding: 16px;
+    border-radius: 12px; border: 1px solid var(--border); margin-bottom: 10px; background: var(--bg);
+  }
+  .rekom-ic { flex-shrink: 0; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+  .rekom-text h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 3px; }
+  .rekom-text p { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+  .chart-wrap { max-width: 300px; margin: 20px auto; }
+
+  /* ===== EDUKASI ===== */
+  .edukasi-wrap { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
+  .edu-filter { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; }
+  .filter-btn {
+    padding: 8px 18px; border-radius: 100px; border: 1.5px solid var(--border);
+    background: white; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.85rem; font-weight: 600; color: var(--text-muted); transition: all 0.2s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .filter-btn:hover, .filter-btn.active { border-color: var(--primary); background: var(--primary-pale); color: var(--primary); }
+  .edu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 20px; }
+  .edu-card {
+    background: white; border-radius: var(--radius); border: 1px solid var(--border);
+    overflow: hidden; cursor: pointer; transition: all 0.3s;
+  }
+  .edu-card:hover { transform: translateY(-5px); box-shadow: 0 12px 36px rgba(15,94,78,0.12); }
+  .edu-thumb {
+    height: 150px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;
+  }
+  .edu-body { padding: 20px; }
+  .edu-tag { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--primary); margin-bottom: 8px; }
+  .edu-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; }
+  .edu-card p { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; }
+  .edu-meta { display: flex; gap: 12px; margin-top: 12px; font-size: 0.75rem; color: var(--text-muted); }
+
+  /* Modal */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 9999;
+    background: rgba(10,30,25,0.5); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: white; border-radius: 20px; max-width: 640px; width: 100%;
+    max-height: 82vh; overflow-y: auto; padding: 36px;
+    position: relative; animation: fadeInUp 0.3s ease;
+  }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px; width: 36px; height: 36px;
+    border-radius: 50%; border: none; background: var(--bg); cursor: pointer;
+    font-size: 1rem; display: flex; align-items: center; justify-content: center;
+  }
+  .modal-box h2 { font-family: 'DM Serif Display', serif; font-size: 1.5rem; margin-bottom: 16px; }
+  .modal-box p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.8; margin-bottom: 12px; }
+  .modal-box ul { padding-left: 20px; color: var(--text-muted); font-size: 0.92rem; }
+  .modal-box ul li { margin-bottom: 8px; line-height: 1.6; }
+
+  /* ===== DASHBOARD ===== */
+  .dashboard-wrap { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
+  .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 16px; margin-bottom: 28px; }
+  .dash-card { background: white; border-radius: var(--radius); padding: 22px; border: 1px solid var(--border); }
+  .dash-card-label { font-size: 0.78rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; }
+  .dash-card-val { font-family: 'DM Serif Display', serif; font-size: 2rem; color: var(--primary); margin: 4px 0; }
+  .dash-card-sub { font-size: 0.8rem; color: var(--text-muted); }
+  .dash-row { display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px; margin-bottom: 20px; }
+  .dash-section { background: white; border-radius: var(--radius); padding: 24px; border: 1px solid var(--border); }
+  .dash-section h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+  .monitoring-form { display: flex; flex-direction: column; gap: 14px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
+  .form-group input, .form-group select {
+    width: 100%; padding: 10px 14px; border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.9rem; color: var(--text); background: var(--bg); transition: all 0.2s;
+  }
+  .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary); background: white; }
+
+  /* Chatbot */
+  .chat-fab {
+    position: fixed; bottom: 28px; right: 28px; z-index: 9998;
+    width: 60px; height: 60px; border-radius: 50%;
+    background: var(--primary); color: white; border: none;
+    cursor: pointer; box-shadow: 0 8px 28px rgba(15,94,78,0.35);
+    transition: all 0.3s; display: flex; align-items: center; justify-content: center;
+  }
+  .chat-fab:hover { transform: scale(1.1); background: var(--primary-light); }
+  .chat-fab-ripple {
+    position: fixed; bottom: 28px; right: 28px; z-index: 9997;
+    width: 60px; height: 60px; border-radius: 50%;
+    background: var(--primary); opacity: 0.3;
+    animation: ripple 2s ease-out infinite;
+    pointer-events: none;
+  }
+  .chat-window {
+    position: fixed; bottom: 100px; right: 28px; z-index: 9997;
+    width: 340px; background: white; border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15); border: 1px solid var(--border);
+    display: none; flex-direction: column; overflow: hidden;
+    animation: fadeInUp 0.3s ease;
+  }
+  .chat-window.open { display: flex; }
+  .chat-header {
+    background: var(--primary); color: white; padding: 16px 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .chat-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center;
+  }
+  .chat-header-info h4 { font-size: 0.9rem; font-weight: 700; }
+  .chat-header-info p { font-size: 0.75rem; opacity: 0.8; }
+  .online-dot { width: 8px; height: 8px; background: #68d391; border-radius: 50%; display: inline-block; animation: blink 1.5s infinite; margin-right: 4px; }
+  .chat-msgs { padding: 16px; height: 280px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+  .msg { max-width: 82%; }
+  .msg-bot .msg-bubble { background: var(--primary-pale); border-radius: 0 12px 12px 12px; padding: 10px 14px; font-size: 0.85rem; color: var(--text); line-height: 1.5; }
+  .msg-user { align-self: flex-end; }
+  .msg-user .msg-bubble { background: var(--primary); border-radius: 12px 0 12px 12px; padding: 10px 14px; font-size: 0.85rem; color: white; line-height: 1.5; }
+  .chat-input-wrap { padding: 12px 16px; border-top: 1px solid var(--border); display: flex; gap: 8px; }
+  .chat-input { flex: 1; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.85rem; outline: none; }
+  .chat-input:focus { border-color: var(--primary); }
+  .chat-send { width: 38px; height: 38px; border-radius: 10px; background: var(--primary); color: white; border: none; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+  .chat-send:hover { background: var(--primary-light); }
+  .chat-quick { padding: 0 16px 12px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .quick-btn { padding: 5px 12px; border-radius: 100px; border: 1.5px solid var(--border); background: white; cursor: pointer; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); transition: all 0.2s; }
+  .quick-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+  .print-btn { display: flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 10px; border: 1.5px solid var(--border); background: white; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.85rem; font-weight: 600; cursor: pointer; color: var(--text); transition: all 0.2s; }
+  .print-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+  footer { background: var(--primary); color: rgba(255,255,255,0.85); padding: 40px 24px; text-align: center; }
+  footer .footer-logo { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: white; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+  footer p { font-size: 0.85rem; line-height: 1.7; }
+  footer .footer-note { font-size: 0.75rem; margin-top: 16px; opacity: 0.6; }
+
+  @media (max-width: 768px) {
+    .hero-content { grid-template-columns: 1fr; }
+    .hero-visual { display: none; }
+    .dash-row { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .hero-stats { gap: 16px; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+  @media print {
+    nav, .chat-fab, .chat-fab-ripple, .chat-window, footer { display: none !important; }
+    .page { display: block !important; padding-top: 0; }
+    body { background: white; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== ANIMATED SVG ICON DEFINITIONS ========== -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <!-- Heartbeat ECG path -->
+    <symbol id="icon-ecg" viewBox="0 0 48 48">
+      <polyline points="2,24 10,24 14,14 18,34 22,20 26,28 30,24 46,24"
+        fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+        stroke-dasharray="300" stroke-dashoffset="300">
+        <animate attributeName="stroke-dashoffset" values="300;0;300" dur="2.5s" repeatCount="indefinite"/>
+      </polyline>
+    </symbol>
+
+    <!-- Heart with pulse -->
+    <symbol id="icon-heart" viewBox="0 0 48 48">
+      <g>
+        <animateTransform attributeName="transform" type="scale" values="1;1.12;1;1.08;1" dur="1.2s" repeatCount="indefinite" additive="sum" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1"/>
+        <path d="M24 40 C24 40 6 28 6 16 C6 10 10.5 6 15 6 C18.5 6 21.5 7.8 24 11 C26.5 7.8 29.5 6 33 6 C37.5 6 42 10 42 16 C42 28 24 40 24 40Z"
+          fill="#e53e3e" stroke="none" opacity="0.9"/>
+        <!-- pulse ring -->
+        <circle cx="24" cy="20" r="0" fill="none" stroke="#e53e3e" stroke-width="1.5" opacity="0">
+          <animate attributeName="r" values="0;20" dur="1.2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.8;0" dur="1.2s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+    </symbol>
+
+    <!-- Magnifying glass search -->
+    <symbol id="icon-search" viewBox="0 0 48 48">
+      <g>
+        <animateTransform attributeName="transform" type="rotate" values="-5 24 24;5 24 24;-5 24 24" dur="2s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
+        <circle cx="21" cy="21" r="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+          <animate attributeName="r" values="12;13;12" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <line x1="30" y1="30" x2="40" y2="40" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      </g>
+    </symbol>
+
+    <!-- Bar chart with growing bars -->
+    <symbol id="icon-chart" viewBox="0 0 48 48">
+      <rect x="6" y="30" width="8" height="12" rx="2" fill="currentColor" opacity="0.7">
+        <animate attributeName="height" values="4;12;8;12" dur="1.8s" repeatCount="indefinite"/>
+        <animate attributeName="y" values="38;30;34;30" dur="1.8s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="20" y="22" width="8" height="20" rx="2" fill="currentColor">
+        <animate attributeName="height" values="6;20;14;20" dur="1.8s" begin="0.2s" repeatCount="indefinite"/>
+        <animate attributeName="y" values="36;22;28;22" dur="1.8s" begin="0.2s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="34" y="14" width="8" height="28" rx="2" fill="currentColor" opacity="0.85">
+        <animate attributeName="height" values="8;28;18;28" dur="1.8s" begin="0.4s" repeatCount="indefinite"/>
+        <animate attributeName="y" values="34;14;24;14" dur="1.8s" begin="0.4s" repeatCount="indefinite"/>
+      </rect>
+      <line x1="4" y1="42" x2="44" y2="42" stroke="currentColor" stroke-width="2" opacity="0.4"/>
+    </symbol>
+
+    <!-- Open book with pages flipping -->
+    <symbol id="icon-book" viewBox="0 0 48 48">
+      <path d="M24 10 C24 10 14 8 6 10 L6 38 C14 36 24 38 24 38 C24 38 34 36 42 38 L42 10 C34 8 24 10 24 10Z"
+        fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+      <line x1="24" y1="10" x2="24" y2="38" stroke="currentColor" stroke-width="2.5"/>
+      <path d="M10 16 L20 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6">
+        <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/>
+      </path>
+      <path d="M10 22 L20 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.4">
+        <animate attributeName="opacity" values="0.4;0.9;0.4" dur="2s" begin="0.3s" repeatCount="indefinite"/>
+      </path>
+      <path d="M10 28 L20 28" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.3">
+        <animate attributeName="opacity" values="0.3;0.8;0.3" dur="2s" begin="0.6s" repeatCount="indefinite"/>
+      </path>
+    </symbol>
+
+    <!-- Trending up arrow with line -->
+    <symbol id="icon-trending" viewBox="0 0 48 48">
+      <polyline points="4,36 16,24 24,30 40,12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+        stroke-dasharray="70" stroke-dashoffset="70">
+        <animate attributeName="stroke-dashoffset" values="70;0;70" dur="2s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
+      </polyline>
+      <polyline points="30,12 40,12 40,22" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+
+    <!-- Robot/AI with blinking eyes -->
+    <symbol id="icon-robot" viewBox="0 0 48 48">
+      <rect x="10" y="16" width="28" height="24" rx="6" fill="none" stroke="currentColor" stroke-width="2.5"/>
+      <rect x="18" y="8" width="12" height="8" rx="3" fill="none" stroke="currentColor" stroke-width="2"/>
+      <line x1="24" y1="8" x2="24" y2="4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="20" cy="26" r="3" fill="currentColor">
+        <animate attributeName="r" values="3;0.5;3" dur="3s" begin="0s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="28" cy="26" r="3" fill="currentColor">
+        <animate attributeName="r" values="3;0.5;3" dur="3s" begin="0.1s" repeatCount="indefinite"/>
+      </circle>
+      <path d="M18 33 Q24 37 30 33" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <animate attributeName="d" values="M18 33 Q24 37 30 33;M18 34 Q24 38 30 34;M18 33 Q24 37 30 33" dur="2s" repeatCount="indefinite"/>
+      </path>
+      <line x1="2" y1="28" x2="10" y2="28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <line x1="38" y1="28" x2="46" y2="28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- Printer with paper coming out -->
+    <symbol id="icon-printer" viewBox="0 0 48 48">
+      <rect x="8" y="18" width="32" height="22" rx="4" fill="none" stroke="currentColor" stroke-width="2.5"/>
+      <rect x="14" y="8" width="20" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+      <rect x="14" y="30" width="20" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2">
+        <animate attributeName="height" values="0;14;14" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="y" values="40;30;30" dur="2s" repeatCount="indefinite"/>
+      </rect>
+      <circle cx="34" cy="26" r="2" fill="currentColor">
+        <animate attributeName="opacity" values="1;0;1" dur="1.5s" repeatCount="indefinite"/>
+      </circle>
+    </symbol>
+
+    <!-- Stethoscope with pulse -->
+    <symbol id="icon-stethoscope" viewBox="0 0 48 48">
+      <path d="M10 8 C10 8 8 12 8 16 C8 22 12 26 18 26 C24 26 28 22 28 16 L28 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M28 12 C28 12 32 12 32 16 C32 20 28 24 28 24 L28 32 C28 38 34 42 40 42" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="40" cy="42" r="4" fill="currentColor">
+        <animate attributeName="r" values="4;5.5;4" dur="1.2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="18" cy="26" r="2" fill="currentColor" opacity="0.5"/>
+    </symbol>
+
+    <!-- Shield with checkmark -->
+    <symbol id="icon-shield" viewBox="0 0 48 48">
+      <path d="M24 4 L40 10 L40 22 C40 32 32 40 24 44 C16 40 8 32 8 22 L8 10 Z"
+        fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round">
+        <animate attributeName="stroke-dasharray" values="0 200;200 0" dur="1.5s" fill="freeze"/>
+      </path>
+      <polyline points="16,24 21,29 32,18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <animate attributeName="stroke-dasharray" values="0 50;50 0" dur="0.5s" begin="1s" fill="freeze"/>
+      </polyline>
+    </symbol>
+
+    <!-- Running person -->
+    <symbol id="icon-run" viewBox="0 0 48 48">
+      <circle cx="32" cy="8" r="4" fill="currentColor"/>
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0,0;0,-2;0,0" dur="0.6s" repeatCount="indefinite"/>
+        <path d="M32 12 L28 24 L20 30" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M28 24 L32 34 L38 40" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M20 18 L30 18 L36 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M14 28 L22 22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <animate attributeName="d" values="M14 28 L22 22;M12 30 L20 24;M14 28 L22 22" dur="0.6s" repeatCount="indefinite"/>
+        </path>
+      </g>
+    </symbol>
+
+    <!-- Food/salad bowl -->
+    <symbol id="icon-food" viewBox="0 0 48 48">
+      <path d="M8 22 Q8 38 24 38 Q40 38 40 22 Z" fill="none" stroke="currentColor" stroke-width="2.5"/>
+      <line x1="8" y1="22" x2="40" y2="22" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M16 22 C16 16 20 10 24 10 C28 10 32 16 32 22" fill="none" stroke="currentColor" stroke-width="2" opacity="0.5"/>
+      <circle cx="20" cy="28" r="2" fill="currentColor" opacity="0.6">
+        <animate attributeName="cy" values="28;26;28" dur="1.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="28" cy="30" r="2" fill="currentColor" opacity="0.6">
+        <animate attributeName="cy" values="30;28;30" dur="1.5s" begin="0.3s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="24" cy="26" r="1.5" fill="currentColor" opacity="0.6">
+        <animate attributeName="cy" values="26;24;26" dur="1.5s" begin="0.6s" repeatCount="indefinite"/>
+      </circle>
+    </symbol>
+
+    <!-- Clipboard/checklist -->
+    <symbol id="icon-clipboard" viewBox="0 0 48 48">
+      <rect x="10" y="8" width="28" height="36" rx="4" fill="none" stroke="currentColor" stroke-width="2.5"/>
+      <rect x="18" y="4" width="12" height="8" rx="3" fill="none" stroke="currentColor" stroke-width="2"/>
+      <line x1="16" y1="20" x2="32" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="16" stroke-dashoffset="16">
+        <animate attributeName="stroke-dashoffset" values="16;0" dur="0.5s" begin="0.3s" fill="freeze"/>
+      </line>
+      <line x1="16" y1="27" x2="32" y2="27" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="16" stroke-dashoffset="16">
+        <animate attributeName="stroke-dashoffset" values="16;0" dur="0.5s" begin="0.6s" fill="freeze"/>
+      </line>
+      <line x1="16" y1="34" x2="26" y2="34" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="10" stroke-dashoffset="10">
+        <animate attributeName="stroke-dashoffset" values="10;0" dur="0.5s" begin="0.9s" fill="freeze"/>
+      </line>
+    </symbol>
+
+    <!-- DNA helix spinning -->
+    <symbol id="icon-dna" viewBox="0 0 48 48">
+      <path d="M16 4 C20 8 28 12 32 16 C28 20 20 24 16 28 C20 32 28 36 32 40 C28 44 20 44 16 44" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <animateTransform attributeName="transform" type="rotate" values="0 24 24;10 24 24;0 24 24;-10 24 24;0 24 24" dur="3s" repeatCount="indefinite"/>
+      </path>
+      <path d="M32 4 C28 8 20 12 16 16 C20 20 28 24 32 28 C28 32 20 36 16 40 C20 44 28 44 32 44" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" opacity="0.5">
+        <animateTransform attributeName="transform" type="rotate" values="0 24 24;-10 24 24;0 24 24;10 24 24;0 24 24" dur="3s" repeatCount="indefinite"/>
+      </path>
+      <line x1="16" y1="16" x2="32" y2="16" stroke="currentColor" stroke-width="1.5" opacity="0.4"/>
+      <line x1="16" y1="24" x2="32" y2="24" stroke="currentColor" stroke-width="1.5" opacity="0.4"/>
+      <line x1="16" y1="32" x2="32" y2="32" stroke="currentColor" stroke-width="1.5" opacity="0.4"/>
+    </symbol>
+
+    <!-- Droplet/blood drop -->
+    <symbol id="icon-drop" viewBox="0 0 48 48">
+      <path d="M24 6 C24 6 10 22 10 30 C10 38 16.3 44 24 44 C31.7 44 38 38 38 30 C38 22 24 6 24 6Z"
+        fill="none" stroke="currentColor" stroke-width="2.5">
+        <animate attributeName="d" values="M24 6 C24 6 10 22 10 30 C10 38 16.3 44 24 44 C31.7 44 38 38 38 30 C38 22 24 6 24 6Z;M24 4 C24 4 9 21 9 30 C9 39 16 46 24 46 C32 46 39 39 39 30 C39 21 24 4 24 4Z;M24 6 C24 6 10 22 10 30 C10 38 16.3 44 24 44 C31.7 44 38 38 38 30 C38 22 24 6 24 6Z" dur="2s" repeatCount="indefinite"/>
+      </path>
+      <path d="M20 30 C20 28 22 26 24 26" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+    </symbol>
+
+    <!-- Home/beranda icon -->
+    <symbol id="icon-home" viewBox="0 0 24 24">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <polyline points="9,22 9,12 15,12 15,22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+
+    <!-- Cross/medical cross -->
+    <symbol id="icon-cross" viewBox="0 0 48 48">
+      <rect x="18" y="6" width="12" height="36" rx="4" fill="currentColor" opacity="0.9"/>
+      <rect x="6" y="18" width="36" height="12" rx="4" fill="currentColor" opacity="0.9"/>
+    </symbol>
+
+    <!-- Warning triangle -->
+    <symbol id="icon-warn" viewBox="0 0 48 48">
+      <path d="M24 6 L44 40 L4 40 Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round">
+        <animate attributeName="stroke-width" values="2.5;3.5;2.5" dur="1s" repeatCount="indefinite"/>
+      </path>
+      <line x1="24" y1="20" x2="24" y2="30" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="24" cy="35" r="2" fill="currentColor"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-logo" onclick="goTo('home')">
+    <div class="nav-logo-icon">
+      <svg width="22" height="22" viewBox="0 0 48 48" style="color:white">
+        <use href="#icon-ecg"/>
+      </svg>
+    </div>
+    DERIDIA
+  </div>
+  <ul class="nav-links">
+    <li><a onclick="goTo('home')" id="nav-home" class="active">
+      <svg width="14" height="14" viewBox="0 0 24 24" style="color:currentColor"><use href="#icon-home"/></svg>
+      Beranda
+    </a></li>
+    <li><a onclick="goTo('skrining')" id="nav-skrining">
+      <svg width="14" height="14" viewBox="0 0 48 48" style="color:currentColor"><use href="#icon-search"/></svg>
+      Skrining
+    </a></li>
+    <li><a onclick="goTo('edukasi')" id="nav-edukasi">
+      <svg width="14" height="14" viewBox="0 0 48 48" style="color:currentColor"><use href="#icon-book"/></svg>
+      Edukasi
+    </a></li>
+    <li><a onclick="goTo('dashboard')" id="nav-dashboard">
+      <svg width="14" height="14" viewBox="0 0 48 48" style="color:currentColor"><use href="#icon-chart"/></svg>
+      Dashboard
+    </a></li>
+    <li><a onclick="goTo('skrining')" class="nav-cta">
+      <svg width="14" height="14" viewBox="0 0 48 48" style="color:white"><use href="#icon-cross"/></svg>
+      Mulai Skrining
+    </a></li>
+  </ul>
+</nav>
+
+<!-- ==================== HOME ==================== -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-circles"><div class="c1"></div><div class="c2"></div></div>
+    <div class="hero-content">
+      <div class="hero-text">
+        <div class="hero-badge">
+          <svg width="14" height="14" viewBox="0 0 48 48" style="color:var(--primary)"><use href="#icon-stethoscope"/></svg>
+          Untuk Masyarakat Indonesia
+        </div>
+        <h1>Deteksi <em>Dini</em> Risiko Diabetes Sebelum Terlambat</h1>
+        <p>DERIDIA adalah platform skrining dan edukasi diabetes berbasis digital yang membantu Anda mengetahui risiko DM secara mandiri, cepat, dan gratis — menggunakan metode FINDRISC yang telah tervalidasi secara ilmiah.</p>
+        <div class="hero-btns">
+          <button class="btn-primary" onclick="goTo('skrining')">
+            <svg width="18" height="18" viewBox="0 0 48 48" style="color:white"><use href="#icon-search"/></svg>
+            Mulai Skrining Sekarang
+          </button>
+          <button class="btn-outline" onclick="goTo('edukasi')">
+            <svg width="18" height="18" viewBox="0 0 48 48" style="color:currentColor"><use href="#icon-book"/></svg>
+            Pelajari Lebih Lanjut
+          </button>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-num">19,5M</div>
+            <div class="stat-label">Penderita DM di Indonesia</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">58%</div>
+            <div class="stat-label">Risiko DM dapat dicegah</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">8 Mnt</div>
+            <div class="stat-label">Durasi skrining FINDRISC</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="mini-card mc2">
+          <div class="ic" style="background:#e8f5f2">
+            <svg width="22" height="22" viewBox="0 0 48 48" style="color:#38a169"><use href="#icon-heart"/></svg>
+          </div>
+          <div><div style="color:#2f855a">Risiko Rendah</div><div style="color:#888;font-weight:400">Selamat!</div></div>
+        </div>
+        <div class="hero-card-main">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+            <svg width="20" height="20" viewBox="0 0 48 48" style="color:var(--primary)"><use href="#icon-ecg"/></svg>
+            <span style="font-weight:700;font-size:1rem">Skor Risiko FINDRISC</span>
+          </div>
+          <div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:16px">Estimasi risiko 10 tahun ke depan</div>
+          <div class="risk-meter">
+            <div class="risk-bar">
+              <div class="risk-indicator" id="hero-indicator" style="left:30%"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--text-muted);margin-top:4px">
+              <span>Rendah (0–6)</span><span>Sedang (7–14)</span><span>Tinggi (≥15)</span>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <div style="flex:1;background:var(--bg);border-radius:10px;padding:12px;text-align:center">
+              <div style="font-size:0.75rem;color:var(--text-muted)">Usia</div>
+              <div style="font-weight:700;color:var(--primary)">45 th</div>
+            </div>
+            <div style="flex:1;background:var(--bg);border-radius:10px;padding:12px;text-align:center">
+              <div style="font-size:0.75rem;color:var(--text-muted)">IMT</div>
+              <div style="font-weight:700;color:var(--primary)">24.5</div>
+            </div>
+            <div style="flex:1;background:var(--bg);border-radius:10px;padding:12px;text-align:center">
+              <div style="font-size:0.75rem;color:var(--text-muted)">Aktivitas</div>
+              <div style="font-weight:700;color:var(--accent)">Cukup</div>
+            </div>
+          </div>
+        </div>
+        <div class="mini-card mc1">
+          <div class="ic" style="background:#fef3dc">
+            <svg width="22" height="22" viewBox="0 0 48 48" style="color:var(--accent)"><use href="#icon-clipboard"/></svg>
+          </div>
+          <div><div style="color:var(--accent)">Rekomendasi</div><div style="color:#888;font-weight:400">3 langkah tersedia</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fitur -->
+  <section style="background:white">
+    <div class="section-inner">
+      <div class="section-label">Fitur Unggulan</div>
+      <div class="section-title">Semua yang Anda Butuhkan<br>dalam Satu Platform</div>
+      <div class="features-grid">
+        <div class="feat-card">
+          <div class="feat-icon-wrap">
+            <svg width="30" height="30" viewBox="0 0 48 48" style="color:var(--primary)"><use href="#icon-search"/></svg>
+          </div>
+          <h3>Skrining Risiko DM</h3>
+          <p>Formulir berbasis FINDRISC yang telah tervalidasi secara ilmiah. Jawab 8 pertanyaan singkat dan dapatkan skor risiko Anda dalam hitungan menit.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon-wrap">
+            <svg width="30" height="30" viewBox="0 0 48 48" style="color:var(--primary)"><use href="#icon-chart"/></svg>
+          </div>
+          <h3>Visualisasi Hasil</h3>
+          <p>Hasil ditampilkan dalam grafik yang mudah dipahami, dilengkapi interpretasi kategori risiko dan rekomendasi personal berbasis skor.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon-wrap">
+            <svg width="30" height="30" viewBox="0 0 48 48" style="color:var(--primary)"><use href="#icon-book"/></svg>
+          </div>
+          <h3>Edukasi Berbasis Risiko</h3>
+          <p>Konten edukasi yang dipersonalisasi sesuai kategori risiko Anda — dari pencegahan hingga pengelolaan diabetes sehari-hari.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon-wrap">
+            <svg width="30" height="30" viewBox="0 0 48 48" style="color:var(--primary)"><use href="#icon-trending"/></svg>
+          </div>
+          <h3>Monitoring Gaya Hidup</h3>
+          <p>Pantau perkembangan IMT, aktivitas fisik, dan pola makan Anda dari waktu ke waktu untuk melihat perubahan positif.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon-wrap">
+            <svg width="30" height="30" viewBox="0 0 48 48" style="color:var(--primary)"><use href="#icon-robot"/></svg>
+          </div>
+          <h3>Chatbot Edukasi</h3>
+          <p>Tanya jawab seputar diabetes kapan saja dengan asisten AI DERIDIA yang siap memberikan informasi yang akurat dan mudah dipahami.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon-wrap">
+            <svg width="30" height="30" viewBox="0 0 48 48" style="color:var(--primary)"><use href="#icon-printer"/></svg>
+          </div>
+          <h3>Cetak Hasil Skrining</h3>
+          <p>Unduh atau cetak laporan hasil skrining untuk dibawa ke dokter atau fasilitas kesehatan terdekat sebagai bahan konsultasi.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cara Pakai -->
+  <section>
+    <div class="section-inner" style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center">
+      <div>
+        <div class="section-label">Cara Penggunaan</div>
+        <div class="section-title">Mudah, Cepat,<br>dan Gratis</div>
+        <p class="section-desc">Tidak perlu mendaftar. Tidak perlu alat laboratorium. Cukup jawab pertanyaan dan ketahui risiko Anda sekarang.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-icon"><svg width="26" height="26" viewBox="0 0 48 48" style="color:var(--primary)"><use href="#icon-clipboard"/></svg></div>
+          <div class="step-content"><h3>Isi Formulir Skrining</h3><p>Jawab 8 pertanyaan sederhana tentang kondisi tubuh dan gaya hidup Anda. Hanya membutuhkan sekitar 5–8 menit.</p></div>
+        </div>
+        <div class="step">
+          <div class="step-icon"><svg width="26" height="26" viewBox="0 0 48 48" style="color:var(--primary)"><use href="#icon-chart"/></svg></div>
+          <div class="step-content"><h3>Dapatkan Skor Risiko</h3><p>Sistem secara otomatis menghitung skor FINDRISC dan mengkategorikan risiko DM Anda ke dalam 5 level.</p></div>
+        </div>
+        <div class="step">
+          <div class="step-icon"><svg width="26" height="26" viewBox="0 0 48 48" style="color:var(--primary)"><use href="#icon-book"/></svg></div>
+          <div class="step-content"><h3>Baca Rekomendasi</h3><p>Terima rekomendasi personal berupa perubahan gaya hidup, edukasi, dan saran konsultasi medis.</p></div>
+        </div>
+        <div class="step">
+          <div class="step-icon"><svg width="26" height="26" viewBox="0 0 48 48" style="color:var(--primary)"><use href="#icon-trending"/></svg></div>
+          <div class="step-content"><h3>Pantau Perkembangan</h3><p>Gunakan fitur monitoring untuk memantau kemajuan gaya hidup sehat Anda dari waktu ke waktu.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">
+      <svg width="28" height="28" viewBox="0 0 48 48" style="color:white"><use href="#icon-stethoscope"/></svg>
+      DERIDIA
+    </div>
+    <p>Deteksi Dini Risiko Diabetes — Media Monitoring dan Edukasi Berbasis Digital</p>
+    <p class="footer-note">⚠️ DERIDIA bukan pengganti diagnosis medis. Konsultasikan hasil skrining Anda dengan tenaga kesehatan profesional.<br>Referensi: FINDRISC (Lindström & Tuomilehto, 2003) | PERKENI 2021 | IDF 2021</p>
+  </footer>
+</div>
+
+<!-- ==================== SKRINING ==================== -->
+<div class="page" id="page-skrining">
+  <div class="screening-wrap">
+    <div class="screening-header">
+      <div style="display:flex;justify-content:center;margin-bottom:16px">
+        <svg width="56" height="56" viewBox="0 0 48 48" style="color:var(--primary)"><use href="#icon-stethoscope"/></svg>
+      </div>
+      <div class="section-label" style="text-align:center">Formulir Skrining FINDRISC</div>
+      <h2 style="font-family:'DM Serif Display',serif;font-size:1.8rem;margin-bottom:8px">Skrining Risiko Diabetes</h2>
+      <p style="color:var(--text-muted);font-size:0.9rem">Jawab 8 pertanyaan berikut secara jujur untuk mendapatkan hasil yang akurat</p>
+    </div>
+    <div id="skrining-form">
+      <div class="progress-wrap">
+        <div class="progress-steps" id="progress-steps"></div>
+      </div>
+      <div id="question-area"></div>
+    </div>
+    <div id="skrining-result" style="display:none">
+      <div class="result-card" id="result-content">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+          <button class="print-btn" onclick="window.print()">
+            <svg width="16" height="16" viewBox="0 0 48 48" style="color:currentColor"><use href="#icon-printer"/></svg>
+            Cetak Hasil
+          </button>
+        </div>
+        <div class="result-score-ring">
+          <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="#e8f5f2" stroke-width="10"/>
+            <circle cx="50" cy="50" r="42" fill="none" stroke="var(--primary)" stroke-width="10"
+              stroke-dasharray="264" id="score-arc" stroke-dashoffset="264" stroke-linecap="round"/>
+          </svg>
+          <div class="score-text">
+            <span class="score-num-big" id="score-num">0</span>
+            <span class="score-max">/26</span>
+          </div>
+        </div>
+        <div id="result-badge" class="result-badge"></div>
+        <h2 id="result-title" style="font-family:'DM Serif Display',serif;font-size:1.5rem;margin-top:8px"></h2>
+        <p class="result-desc" id="result-desc"></p>
+        <div class="chart-wrap"><canvas id="result-chart" width="300" height="200"></canvas></div>
+        <div class="rekom-list" id="rekom-list"></div>
+        <div style="display:flex;gap:12px;justify-content:center;margin-top:28px;flex-wrap:wrap">
+          <button class="btn-primary" onclick="goTo('edukasi')">
+            <svg width="18" height="18" viewBox="0 0 48 48" style="color:white"><use href="#icon-book"/></svg>
+            Lihat Edukasi
+          </button>
+          <button class="btn-outline" onclick="resetSkrining()">
+            <svg width="18" height="18" viewBox="0 0 48 48" style="color:currentColor"><use href="#icon-search"/></svg>
+            Ulangi Skrining
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== EDUKASI ==================== -->
+<div class="page" id="page-edukasi">
+  <div class="edukasi-wrap">
+    <div style="margin-bottom:32px;display:flex;align-items:flex-start;gap:16px">
+      <svg width="48" height="48" viewBox="0 0 48 48" style="color:var(--primary);flex-shrink:0;margin-top:4px"><use href="#icon-book"/></svg>
+      <div>
+        <div class="section-label">Pusat Edukasi</div>
+        <h2 style="font-family:'DM Serif Display',serif;font-size:1.8rem;margin-bottom:8px">Edukasi Kesehatan Diabetes</h2>
+        <p style="color:var(--text-muted);font-size:0.9rem">Informasi terpercaya berbasis panduan PERKENI 2021 dan WHO 2023</p>
+      </div>
+    </div>
+    <div class="edu-filter">
+      <button class="filter-btn active" onclick="filterEdu('all',this)">
+        <svg width="12" height="12" viewBox="0 0 48 48" style="color:currentColor"><use href="#icon-cross"/></svg>Semua
+      </button>
+      <button class="filter-btn" onclick="filterEdu('dasar',this)">
+        <svg width="12" height="12" viewBox="0 0 48 48" style="color:currentColor"><use href="#icon-dna"/></svg>Dasar DM
+      </button>
+      <button class="filter-btn" onclick="filterEdu('pencegahan',this)">
+        <svg width="12" height="12" viewBox="0 0 48 48" style="color:currentColor"><use href="#icon-shield"/></svg>Pencegahan
+      </button>
+      <button class="filter-btn" onclick="filterEdu('gaya-hidup',this)">
+        <svg width="12" height="12" viewBox="0 0 48 48" style="color:currentColor"><use href="#icon-run"/></svg>Gaya Hidup
+      </button>
+      <button class="filter-btn" onclick="filterEdu('nutrisi',this)">
+        <svg width="12" height="12" viewBox="0 0 48 48" style="color:currentColor"><use href="#icon-food"/></svg>Nutrisi
+      </button>
+      <button class="filter-btn" onclick="filterEdu('monitoring',this)">
+        <svg width="12" height="12" viewBox="0 0 48 48" style="color:currentColor"><use href="#icon-chart"/></svg>Monitoring
+      </button>
+    </div>
+    <div class="edu-grid" id="edu-grid"></div>
+  </div>
+</div>
+
+<!-- ==================== DASHBOARD ==================== -->
+<div class="page" id="page-dashboard">
+  <div class="dashboard-wrap">
+    <div style="margin-bottom:32px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px">
+      <div style="display:flex;align-items:flex-start;gap:14px">
+        <svg width="44" height="44" viewBox="0 0 48 48" style="color:var(--primary);flex-shrink:0;margin-top:4px"><use href="#icon-trending"/></svg>
+        <div>
+          <div class="section-label">Dashboard Monitoring</div>
+          <h2 style="font-family:'DM Serif Display',serif;font-size:1.8rem">Pantau Kesehatan Anda</h2>
+        </div>
+      </div>
+      <button class="print-btn" onclick="window.print()">
+        <svg width="16" height="16" viewBox="0 0 48 48" style="color:currentColor"><use href="#icon-printer"/></svg>
+        Cetak Laporan
+      </button>
+    </div>
+    <div class="dash-grid">
+      <div class="dash-card">
+        <div class="dash-card-label">
+          <svg width="14" height="14" viewBox="0 0 48 48" style="color:var(--primary)"><use href="#icon-ecg"/></svg>
+          Skor FINDRISC Terakhir
+        </div>
+        <div class="dash-card-val" id="d-score">–</div>
+        <div class="dash-card-sub">dari 26 poin</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-label">
+          <svg width="14" height="14" viewBox="0 0 48 48" style="color:var(--primary)"><use href="#icon-warn"/></svg>
+          Kategori Risiko
+        </div>
+        <div class="dash-card-val" style="font-size:1.2rem" id="d-cat">Belum skrining</div>
+        <div class="dash-card-sub" id="d-cat-sub"></div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-label">
+          <svg width="14" height="14" viewBox="0 0 48 48" style="color:var(--primary)"><use href="#icon-drop"/></svg>
+          IMT Terakhir
+        </div>
+        <div class="dash-card-val" id="d-imt">–</div>
+        <div class="dash-card-sub" id="d-imt-cat">–</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-label">
+          <svg width="14" height="14" viewBox="0 0 48 48" style="color:var(--primary)"><use href="#icon-clipboard"/></svg>
+          Total Entri Monitoring
+        </div>
+        <div class="dash-card-val" id="d-entries">0</div>
+        <div class="dash-card-sub">catatan kesehatan</div>
+      </div>
+    </div>
+    <div class="dash-row">
+      <div class="dash-section">
+        <h3>
+          <svg width="18" height="18" viewBox="0 0 48 48" style="color:var(--primary)"><use href="#icon-trending"/></svg>
+          Tren Skor Risiko & IMT
+        </h3>
+        <canvas id="dash-chart" height="200"></canvas>
+      </div>
+      <div class="dash-section">
+        <h3>
+          <svg width="18" height="18" viewBox="0 0 48 48" style="color:var(--primary)"><use href="#icon-clipboard"/></svg>
+          Catat Monitoring Baru
+        </h3>
+        <div class="monitoring-form" id="monitoring-form">
+          <div class="form-row">
+            <div class="form-group"><label>Berat Badan (kg)</label><input type="number" id="m-bb" placeholder="cth: 68" min="30" max="200"></div>
+            <div class="form-group"><label>Tinggi Badan (cm)</label><input type="number" id="m-tb" placeholder="cth: 165" min="100" max="250"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Aktivitas Fisik</label>
+              <select id="m-aktiv">
+                <option value="">Pilih...</option>
+                <option value="rendah">Rendah (&lt;30 mnt/hari)</option>
+                <option value="sedang">Sedang (30–60 mnt/hari)</option>
+                <option value="tinggi">Tinggi (&gt;60 mnt/hari)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Pola Makan</label>
+              <select id="m-makan">
+                <option value="">Pilih...</option>
+                <option value="buruk">Buruk (banyak gula/lemak)</option>
+                <option value="sedang">Cukup</option>
+                <option value="baik">Baik (serat & sayur cukup)</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group"><label>Catatan Tambahan</label><input type="text" id="m-catatan" placeholder="cth: mulai olahraga rutin"></div>
+          <button class="btn-primary" onclick="saveMonitoring()" style="width:100%">
+            <svg width="18" height="18" viewBox="0 0 48 48" style="color:white"><use href="#icon-trending"/></svg>
+            Simpan Catatan
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="dash-section">
+      <h3>
+        <svg width="18" height="18" viewBox="0 0 48 48" style="color:var(--primary)"><use href="#icon-clipboard"/></svg>
+        Riwayat Monitoring
+      </h3>
+      <div id="monitoring-history" style="margin-top:8px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="edu-modal" onclick="closeModal(event)">
+  <div class="modal-box" id="modal-content">
+    <button class="modal-close" onclick="document.getElementById('edu-modal').classList.remove('open')">✕</button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- Chatbot -->
+<div class="chat-fab-ripple"></div>
+<button class="chat-fab" onclick="toggleChat()" id="chat-fab" title="Tanya DERIDIA AI">
+  <svg width="26" height="26" viewBox="0 0 48 48" style="color:white"><use href="#icon-robot"/></svg>
+</button>
+<div class="chat-window" id="chat-window">
+  <div class="chat-header">
+    <div class="chat-avatar">
+      <svg width="24" height="24" viewBox="0 0 48 48" style="color:white"><use href="#icon-stethoscope"/></svg>
+    </div>
+    <div class="chat-header-info">
+      <h4>DERIDIA Assistant</h4>
+      <p><span class="online-dot"></span>Siap membantu Anda</p>
+    </div>
+  </div>
+  <div class="chat-msgs" id="chat-msgs">
+    <div class="msg msg-bot"><div class="msg-bubble">Halo! 👋 Saya asisten DERIDIA. Saya siap membantu menjawab pertanyaan Anda seputar diabetes dan kesehatan. Ada yang ingin ditanyakan?</div></div>
+  </div>
+  <div class="chat-quick">
+    <button class="quick-btn" onclick="sendQuick('Apa itu diabetes?')">Apa itu DM?</button>
+    <button class="quick-btn" onclick="sendQuick('Faktor risiko diabetes?')">Faktor risiko</button>
+    <button class="quick-btn" onclick="sendQuick('Cara mencegah diabetes?')">Pencegahan</button>
+  </div>
+  <div class="chat-input-wrap">
+    <input class="chat-input" id="chat-input" placeholder="Ketik pertanyaan Anda..." onkeydown="if(event.key==='Enter')sendChat()">
+    <button class="chat-send" onclick="sendChat()">
+      <svg width="16" height="16" viewBox="0 0 48 48" style="color:white"><use href="#icon-trending"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+// ===== NAVIGATION =====
+function goTo(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  const navEl = document.getElementById('nav-' + page);
+  if (navEl) navEl.classList.add('active');
+  window.scrollTo(0, 0);
+  if (page === 'dashboard') renderDashboard();
+}
+
+// ===== QUESTIONS =====
+const qIcons = ['#icon-stethoscope','#icon-drop','#icon-drop','#icon-run','#icon-food','#icon-warn','#icon-dna','#icon-heart'];
+const questions = [
+  { id:1, title:"Berapa usia Anda?", hint:"Usia adalah salah satu faktor risiko utama diabetes",
+    options:[{label:"Di bawah 35 tahun",score:0},{label:"35 – 44 tahun",score:0},{label:"45 – 54 tahun",score:2},{label:"55 – 64 tahun",score:3},{label:"Lebih dari 64 tahun",score:4}]},
+  { id:2, title:"Berapa Indeks Massa Tubuh (IMT) Anda?", hint:"IMT = BB (kg) ÷ TB² (m). Normal: 18.5–22.9 | Lebih: 23–27.4 | Obese: ≥27.5",
+    options:[{label:"Di bawah 23 kg/m² (Normal)",score:0},{label:"23 – 27.4 kg/m² (Kelebihan BB)",score:1},{label:"27.5 – 34.9 kg/m² (Obesitas I)",score:2},{label:"35 kg/m² atau lebih (Obesitas II)",score:3}]},
+  { id:3, title:"Berapa lingkar pinggang Anda?", hint:"Lemak perut berhubungan langsung dengan risiko diabetes",
+    options:[{label:"Pria < 90 cm / Wanita < 80 cm",score:0},{label:"Pria 90–99 cm / Wanita 80–89 cm",score:3},{label:"Pria ≥ 100 cm / Wanita ≥ 90 cm",score:4}]},
+  { id:4, title:"Seberapa aktif Anda secara fisik?", hint:"Aktivitas fisik = ≥30 menit per hari atau 3 jam per minggu",
+    options:[{label:"Ya, aktif secara fisik setiap hari",score:0},{label:"Tidak, kurang aktif secara fisik",score:2}]},
+  { id:5, title:"Seberapa sering mengonsumsi sayuran, buah, atau biji-bijian?", hint:"Pola makan kaya serat berperan penting dalam pencegahan diabetes",
+    options:[{label:"Setiap hari, secara rutin",score:0},{label:"Tidak setiap hari",score:1}]},
+  { id:6, title:"Apakah Anda pernah mengonsumsi obat antihipertensi?", hint:"Hipertensi dan diabetes sering terjadi bersamaan",
+    options:[{label:"Tidak pernah",score:0},{label:"Ya, pernah / sedang mengonsumsi",score:2}]},
+  { id:7, title:"Apakah Anda pernah ditemukan kadar gula darah yang tinggi?", hint:"Termasuk saat kehamilan (diabetes gestasional)",
+    options:[{label:"Tidak pernah",score:0},{label:"Ya, pernah ditemukan gula darah tinggi",score:5}]},
+  { id:8, title:"Apakah ada anggota keluarga yang menderita diabetes?", hint:"Riwayat keluarga meningkatkan risiko secara signifikan",
+    options:[{label:"Tidak ada",score:0},{label:"Ya, kakek/nenek, paman/bibi, atau sepupu",score:3},{label:"Ya, orang tua, saudara kandung, atau anak",score:5}]}
+];
+
+let currentQ = 0, answers = Array(questions.length).fill(null), totalScore = 0;
+
+function initSkrining() {
+  currentQ = 0; answers = Array(questions.length).fill(null); totalScore = 0;
+  renderProgress(); renderQuestion();
+  document.getElementById('skrining-form').style.display = 'block';
+  document.getElementById('skrining-result').style.display = 'none';
+}
+
+function renderProgress() {
+  const el = document.getElementById('progress-steps');
+  el.innerHTML = questions.map((q, i) => {
+    let cls = i < currentQ ? 'done' : (i === currentQ ? 'active' : '');
+    return `<div class="progress-step-item">
+      <div class="ps-dot ${cls}">${i < currentQ ? '✓' : i+1}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderQuestion() {
+  const q = questions[currentQ];
+  const sel = answers[currentQ];
+  const icon = qIcons[currentQ] || '#icon-stethoscope';
+  const html = `
+    <div class="question-card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <svg width="28" height="28" viewBox="0 0 48 48" style="color:var(--primary)"><use href="${icon}"/></svg>
+        <div class="q-num">Pertanyaan ${currentQ + 1} dari ${questions.length}</div>
+      </div>
+      <div class="q-text">${q.title}</div>
+      <div class="q-hint">
+        <svg width="14" height="14" viewBox="0 0 48 48" style="color:var(--accent);flex-shrink:0;margin-top:2px"><use href="#icon-warn"/></svg>
+        ${q.hint}
+      </div>
+      <div class="options-grid">
+        ${q.options.map((opt, i) => `
+          <button class="opt-btn ${sel === i ? 'selected' : ''}" onclick="selectOpt(${i})">
+            <div class="opt-radio"></div>
+            <span>${opt.label}</span>
+            <span class="opt-score">+${opt.score} poin</span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="q-nav">
+        <button class="btn-outline" onclick="prevQ()" ${currentQ === 0 ? 'disabled style="opacity:0.4"' : ''}>← Sebelumnya</button>
+        ${currentQ < questions.length - 1
+          ? `<button class="btn-primary" onclick="nextQ()" ${sel === null ? 'disabled style="opacity:0.5;cursor:not-allowed"' : ''}>Selanjutnya →</button>`
+          : `<button class="btn-primary" onclick="showResult()" ${sel === null ? 'disabled style="opacity:0.5;cursor:not-allowed"' : ''} style="background:var(--accent)">
+              <svg width="18" height="18" viewBox="0 0 48 48" style="color:white"><use href="#icon-chart"/></svg>
+              Lihat Hasil
+            </button>`
+        }
+      </div>
+    </div>`;
+  document.getElementById('question-area').innerHTML = html;
+}
+
+function selectOpt(i) { answers[currentQ] = i; renderQuestion(); }
+function nextQ() { if (answers[currentQ] === null) return; currentQ++; renderProgress(); renderQuestion(); }
+function prevQ() { if (currentQ > 0) { currentQ--; renderProgress(); renderQuestion(); } }
+
+function showResult() {
+  totalScore = answers.reduce((sum, ans, qi) => sum + (ans !== null ? questions[qi].options[ans].score : 0), 0);
+  let category, badge, title, desc, color, recommendations;
+  if (totalScore <= 6) {
+    badge = 'badge-low'; title = 'Risiko Rendah'; color = '#38a169';
+    desc = 'Skor Anda menunjukkan risiko rendah (~1 dari 100 orang dalam 10 tahun). Tetap pertahankan gaya hidup sehat Anda!';
+    recommendations = [
+      {svgIcon:'#icon-food',title:'Pertahankan Pola Makan Sehat',desc:'Konsumsi sayuran, buah, dan biji-bijian setiap hari. Batasi gula tambahan.'},
+      {svgIcon:'#icon-run',title:'Tetap Aktif Bergerak',desc:'Pertahankan aktivitas fisik minimal 30 menit per hari, 5 hari per minggu.'},
+      {svgIcon:'#icon-stethoscope',title:'Pemeriksaan Rutin',desc:'Lakukan pemeriksaan gula darah setidaknya sekali setahun sebagai deteksi dini.'}
+    ];
+  } else if (totalScore <= 11) {
+    badge = 'badge-moderate'; title = 'Risiko Agak Meningkat'; color = '#d69e2e';
+    desc = 'Skor Anda menunjukkan risiko yang agak meningkat (~1 dari 25 orang dalam 10 tahun). Perubahan gaya hidup sekarang dapat mengurangi risiko Anda.';
+    recommendations = [
+      {svgIcon:'#icon-drop',title:'Jaga Berat Badan Ideal',desc:'Penurunan BB 5–10% sudah dapat menurunkan risiko diabetes secara bermakna.'},
+      {svgIcon:'#icon-run',title:'Tingkatkan Aktivitas Fisik',desc:'Mulai dengan 30 menit jalan kaki setiap hari. Meningkatkan sensitivitas insulin.'},
+      {svgIcon:'#icon-food',title:'Perbaiki Pola Makan',desc:'Kurangi karbohidrat sederhana, perbanyak serat. Hindari minuman manis.'},
+      {svgIcon:'#icon-stethoscope',title:'Konsultasi ke Dokter',desc:'Disarankan periksa gula darah puasa dan konsultasi dengan dokter.'}
+    ];
+  } else if (totalScore <= 14) {
+    badge = 'badge-high'; title = 'Risiko Sedang'; color = '#dd6b20';
+    desc = 'Risiko Anda tergolong sedang (~1 dari 6 orang dalam 10 tahun). Diperlukan perubahan gaya hidup yang lebih serius dan pemantauan medis berkala.';
+    recommendations = [
+      {svgIcon:'#icon-stethoscope',title:'Segera Periksa ke Dokter',desc:'Lakukan pemeriksaan gula darah puasa (GDP) dan TTGO secepatnya.'},
+      {svgIcon:'#icon-food',title:'Konsultasi Ahli Gizi',desc:'Dapatkan panduan pola makan yang tepat dari ahli gizi.'},
+      {svgIcon:'#icon-run',title:'Program Olahraga Terstruktur',desc:'Kombinasikan aerobik 150 menit/minggu + latihan kekuatan 2–3x/minggu.'},
+      {svgIcon:'#icon-drop',title:'Turunkan Lingkar Pinggang',desc:'Target lingkar pinggang <90 cm (pria) / <80 cm (wanita).'}
+    ];
+  } else if (totalScore <= 20) {
+    badge = 'badge-high'; title = 'Risiko Tinggi'; color = '#e53e3e';
+    desc = 'Skor Anda menunjukkan risiko tinggi (~1 dari 3 orang dalam 10 tahun). Kemungkinan besar Anda sudah mengalami pre-diabetes. Tindakan segera sangat dianjurkan.';
+    recommendations = [
+      {svgIcon:'#icon-warn',title:'Pemeriksaan Medis Mendesak',desc:'Segera lakukan pemeriksaan HbA1c, gula darah puasa, dan TTGO.'},
+      {svgIcon:'#icon-stethoscope',title:'Konsultasi Dokter Spesialis',desc:'Pertimbangkan konsultasi dengan dokter spesialis penyakit dalam.'},
+      {svgIcon:'#icon-shield',title:'Program Pencegahan Intensif',desc:'Ikuti program pencegahan DM yang terstruktur — turunkan risiko hingga 58%.'},
+      {svgIcon:'#icon-trending',title:'Monitoring Rutin',desc:'Gunakan fitur monitoring DERIDIA dan pantau perkembangan setiap minggu.'}
+    ];
+  } else {
+    badge = 'badge-veryhigh'; title = 'Risiko Sangat Tinggi'; color = '#9b1c1c';
+    desc = 'Risiko Anda sangat tinggi (~1 dari 2 orang dalam 10 tahun). Sangat mungkin Anda sudah menderita diabetes yang belum terdiagnosis.';
+    recommendations = [
+      {svgIcon:'#icon-warn',title:'Segera ke Fasilitas Kesehatan',desc:'Pergi ke Puskesmas atau klinik terdekat untuk pemeriksaan gula darah sesegera mungkin.'},
+      {svgIcon:'#icon-drop',title:'Pemeriksaan Laboratorium Lengkap',desc:'Periksa GDP, GDS, HbA1c, profil lipid, dan fungsi ginjal.'},
+      {svgIcon:'#icon-stethoscope',title:'Penanganan Medis Profesional',desc:'Ikuti seluruh anjuran dokter. Jangan menunda terapi yang mungkin diperlukan.'},
+      {svgIcon:'#icon-heart',title:'Libatkan Keluarga',desc:'Dukungan keluarga terbukti meningkatkan keberhasilan pengelolaan penyakit kronis.'}
+    ];
+  }
+
+  document.getElementById('score-num').textContent = totalScore;
+  document.getElementById('result-badge').className = 'result-badge ' + badge;
+  document.getElementById('result-badge').textContent = title;
+  document.getElementById('result-title').textContent = title + ' — Skor ' + totalScore + '/26';
+  document.getElementById('result-desc').textContent = desc;
+
+  const pct = totalScore / 26;
+  const offset = 264 - (264 * pct);
+  const arc = document.getElementById('score-arc');
+  arc.style.stroke = color;
+  setTimeout(() => { arc.style.strokeDashoffset = offset; arc.style.transition = 'stroke-dashoffset 1.2s ease'; }, 100);
+
+  document.getElementById('rekom-list').innerHTML =
+    '<h3 style="font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px"><svg width="20" height="20" viewBox="0 0 48 48" style="color:var(--primary)"><use href="#icon-clipboard"/></svg> Rekomendasi Personal</h3>' +
+    recommendations.map(r => `
+      <div class="rekom-item">
+        <div class="rekom-ic"><svg width="36" height="36" viewBox="0 0 48 48" style="color:var(--primary)"><use href="${r.svgIcon}"/></svg></div>
+        <div class="rekom-text"><h4>${r.title}</h4><p>${r.desc}</p></div>
+      </div>`).join('');
+
+  setTimeout(() => {
+    const ctx = document.getElementById('result-chart').getContext('2d');
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Skor Anda', 'Sisa'],
+        datasets: [{ data: [totalScore, 26 - totalScore], backgroundColor: [color, '#e8f5f2'], borderWidth: 0 }]
+      },
+      options: { cutout: '70%', plugins: { legend: { display: false } } }
+    });
+  }, 200);
+
+  dashData.lastScore = totalScore;
+  dashData.lastCategory = title;
+  document.getElementById('skrining-form').style.display = 'none';
+  document.getElementById('skrining-result').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+function resetSkrining() { initSkrining(); }
+
+// ===== EDUKASI =====
+const eduArticleIcons = {
+  1: { svgIcon: '#icon-stethoscope', bg: '#e8f5f2', color: '#0f5e4e' },
+  2: { svgIcon: '#icon-warn', bg: '#fff5f5', color: '#c53030' },
+  3: { svgIcon: '#icon-shield', bg: '#e8f5f2', color: '#0f5e4e' },
+  4: { svgIcon: '#icon-run', bg: '#fef3dc', color: '#c05621' },
+  5: { svgIcon: '#icon-food', bg: '#e8f5f2', color: '#0f5e4e' },
+  6: { svgIcon: '#icon-drop', bg: '#fef3dc', color: '#c05621' },
+};
+const eduArticles = [
+  { id:1, cat:'dasar', tag:'Dasar DM', title:'Apa Itu Diabetes Mellitus?', summary:'Pelajari definisi, jenis, dan mekanisme diabetes mellitus secara komprehensif.', read:'5 mnt',
+    content:{intro:'Diabetes Mellitus (DM) adalah penyakit metabolik kronis yang ditandai dengan hiperglikemia akibat gangguan sekresi insulin, kerja insulin, atau keduanya (WHO, 2023).',sections:[{title:'Jenis-Jenis Diabetes',body:'DM Tipe 1 (autoimun), Tipe 2 (resistensi insulin, ~90%), Gestasional, dan tipe lain. Tipe 2 adalah yang paling umum dan paling dapat dicegah.'},{title:'Gejala yang Perlu Diwaspadai',body:'Gejala klasik: Poliuria (sering BAK), Polidipsia (sering haus), Polifagia (sering lapar), penurunan BB tanpa sebab. Gejala lain: mudah lelah, luka sulit sembuh, penglihatan kabur.'},{title:'Komplikasi Jika Tidak Ditangani',body:'Penyakit jantung, stroke, gagal ginjal, kebutaan (retinopati), kerusakan saraf (neuropati), dan amputasi kaki jika diabetes tidak terkontrol.'}],tips:['Kenali gejala sejak dini','Periksa gula darah secara rutin','Konsultasikan dengan dokter jika ada gejala']}
+  },
+  { id:2, cat:'dasar', tag:'Dasar DM', title:'Faktor Risiko Diabetes yang Perlu Diketahui', summary:'Kenali faktor-faktor yang meningkatkan risiko diabetes agar dapat dicegah lebih awal.', read:'4 mnt',
+    content:{intro:'Faktor risiko DM dibagi menjadi yang dapat dimodifikasi dan yang tidak dapat dimodifikasi. Mengenalinya membantu Anda mengambil langkah pencegahan yang tepat.',sections:[{title:'Faktor yang Tidak Dapat Dimodifikasi',body:'Usia ≥45 tahun, riwayat keluarga DM, riwayat DM gestasional, ras/etnis tertentu. Tidak dapat diubah, namun penting untuk kewaspadaan.'},{title:'Faktor yang Dapat Dimodifikasi',body:'IMT ≥23, kurang aktivitas fisik, pola makan tidak sehat, merokok, hipertensi, dislipidemia. Faktor-faktor ini DAPAT diubah dengan perubahan gaya hidup.'},{title:'Pre-Diabetes',body:'GDP 100–125 mg/dL atau HbA1c 5.7–6.4% — kondisi reversibel yang meningkatkan risiko DM secara signifikan jika tidak ditangani.'}],tips:['Ketahui IMT Anda','Pantau tekanan darah secara rutin','Lakukan skrining FINDRISC secara berkala']}
+  },
+  { id:3, cat:'pencegahan', tag:'Pencegahan', title:'Strategi Mencegah Diabetes Tipe 2', summary:'Penelitian membuktikan diabetes tipe 2 dapat dicegah hingga 58% dengan perubahan gaya hidup.', read:'6 mnt',
+    content:{intro:'Berdasarkan Diabetes Prevention Program (DPP), intervensi gaya hidup intensif dapat mencegah perkembangan pre-diabetes menjadi DM Tipe 2 hingga 58% (Knowler et al., 2022).',sections:[{title:'Aktivitas Fisik sebagai Pilar Utama',body:'Target: minimal 150 menit aerobik intensitas sedang per minggu. Tambahkan latihan kekuatan 2–3x/minggu. Mulai dari yang kecil dan tingkatkan bertahap.'},{title:'Pola Makan Pencegah Diabetes',body:'Perbanyak serat (sayuran, buah, biji-bijian utuh). Batasi gula tambahan & karbohidrat olahan. Pilih lemak sehat. Hindari minuman manis.'},{title:'Manajemen Berat Badan',body:'Penurunan BB 5–10% dari berat awal sudah memberikan manfaat bermakna. Tidak perlu mencapai berat ideal secara instan.'}],tips:['Berjalan kaki 30 menit setelah makan besar','Ganti nasi putih dengan nasi merah','Pilih air putih daripada minuman manis']}
+  },
+  { id:4, cat:'gaya-hidup', tag:'Gaya Hidup', title:'Olahraga yang Tepat untuk Cegah Diabetes', summary:'Panduan lengkap jenis, durasi, dan intensitas olahraga yang efektif mencegah diabetes.', read:'5 mnt',
+    content:{intro:'Aktivitas fisik adalah intervensi paling efektif dan murah untuk mencegah dan mengelola diabetes. Olahraga meningkatkan sensitivitas insulin sel otot.',sections:[{title:'Olahraga Aerobik (Kardio)',body:'Jalan cepat, jogging, bersepeda, berenang, senam. Durasi: 30–60 menit/sesi, 5x/minggu. Intensitas sedang: dapat bicara tapi napas agak terengah.'},{title:'Latihan Kekuatan',body:'Squat, push-up, angkat beban, yoga, pilates. Frekuensi: 2–3x/minggu. Meningkatkan massa otot yang membakar glukosa lebih efisien.'},{title:'Tips Memulai untuk Pemula',body:'Mulai 10 menit/hari, tingkatkan bertahap. Pilih aktivitas menyenangkan. Olahraga bersama teman meningkatkan motivasi.'}],tips:['Gunakan tangga daripada lift','Parkir lebih jauh dan berjalan kaki','Peregangan 5 menit setiap jam']}
+  },
+  { id:5, cat:'nutrisi', tag:'Nutrisi', title:'Panduan Makan Sehat untuk Cegah Diabetes', summary:'Prinsip-prinsip pola makan berbasis bukti untuk menjaga kadar gula darah tetap stabil.', read:'7 mnt',
+    content:{intro:'Pola makan yang baik adalah fondasi pencegahan dan pengelolaan diabetes. Tidak ada "diet diabetes" satu ukuran untuk semua, namun ada prinsip umum yang berlaku.',sections:[{title:'Metode Piring Sehat',body:'½ piring: sayuran non-tepung. ¼ piring: protein (ikan, ayam, tahu, tempe). ¼ piring: karbohidrat kompleks (nasi merah, singkong, kentang rebus).'},{title:'Indeks Glikemik',body:'Pilih IG rendah: oatmeal, kacang-kacangan, sayuran, buah utuh. Hindari IG tinggi: nasi putih berlebihan, roti putih, minuman manis.'},{title:'Makanan yang Perlu Dibatasi',body:'Gula tambahan >25g/hari (wanita) atau >36g/hari (pria), minuman berpemanis, makanan olahan tinggi sodium, lemak jenuh dan trans.'}],tips:['Makan 5–6 porsi kecil per hari','Jangan lewatkan sarapan','Kunyah makanan perlahan']}
+  },
+  { id:6, cat:'monitoring', tag:'Monitoring', title:'Memahami Hasil Pemeriksaan Gula Darah', summary:'Panduan lengkap menginterpretasikan hasil lab GDP, GDS, GD2PP, dan HbA1c.', read:'4 mnt',
+    content:{intro:'Pemahaman terhadap hasil pemeriksaan gula darah membantu Anda memantau kondisi dan mengambil keputusan kesehatan yang tepat.',sections:[{title:'Gula Darah Puasa (GDP)',body:'Normal: <100 mg/dL | Pre-diabetes: 100–125 mg/dL | Diabetes: ≥126 mg/dL. Dilakukan setelah puasa ≥8 jam. Disarankan setahun sekali usia ≥45 tahun.'},{title:'HbA1c',body:'Normal: <5.7% | Pre-diabetes: 5.7–6.4% | Diabetes: ≥6.5%. Mencerminkan rata-rata gula darah 2–3 bulan terakhir — lebih akurat dari pemeriksaan sesaat.'},{title:'Kapan Harus Periksa?',body:'Skrining awal usia ≥45 tahun. Lebih awal jika ada faktor risiko. Frekuensi: 1–3 tahun jika normal, lebih sering jika pre-diabetes.'}],tips:['Simpan semua hasil lab dalam satu folder','Bawa hasil sebelumnya saat kontrol ke dokter','Tanyakan kepada dokter arti setiap angka']}
+  }
+];
+
+function renderEdu(articles) {
+  document.getElementById('edu-grid').innerHTML = articles.map(a => {
+    const ic = eduArticleIcons[a.id] || { svgIcon:'#icon-stethoscope', bg:'#e8f5f2', color:'#0f5e4e' };
+    return `
+    <div class="edu-card" onclick="openModal(${a.id})">
+      <div class="edu-thumb" style="background:${ic.bg}">
+        <svg width="64" height="64" viewBox="0 0 48 48" style="color:${ic.color}"><use href="${ic.svgIcon}"/></svg>
+      </div>
+      <div class="edu-body">
+        <div class="edu-tag">${a.tag}</div>
+        <h3>${a.title}</h3>
+        <p>${a.summary}</p>
+        <div class="edu-meta">
+          <span>⏱ ${a.read} baca</span>
+          <span>📖 Buka artikel</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterEdu(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderEdu(cat === 'all' ? eduArticles : eduArticles.filter(a => a.cat === cat));
+}
+
+function openModal(id) {
+  const a = eduArticles.find(x => x.id === id); if (!a) return;
+  const ic = eduArticleIcons[a.id] || { svgIcon:'#icon-stethoscope', bg:'#e8f5f2', color:'#0f5e4e' };
+  document.getElementById('modal-body').innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+      <div style="width:52px;height:52px;border-radius:14px;background:${ic.bg};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="34" height="34" viewBox="0 0 48 48" style="color:${ic.color}"><use href="${ic.svgIcon}"/></svg>
+      </div>
+      <div>
+        <div style="font-size:0.72rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:1px">${a.tag}</div>
+        <h2 style="margin:0">${a.title}</h2>
+      </div>
+    </div>
+    <p><em>${a.content.intro}</em></p>
+    ${a.content.sections.map(s=>`<h3 style="font-weight:700;font-size:1rem;margin:18px 0 6px;color:var(--primary)">${s.title}</h3><p>${s.body}</p>`).join('')}
+    <div style="background:var(--primary-pale);border-radius:12px;padding:16px;margin-top:20px">
+      <div style="font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px">
+        <svg width="18" height="18" viewBox="0 0 48 48" style="color:var(--primary)"><use href="#icon-clipboard"/></svg>
+        Tips Praktis
+      </div>
+      <ul>${a.content.tips.map(t=>`<li>${t}</li>`).join('')}</ul>
+    </div>`;
+  document.getElementById('edu-modal').classList.add('open');
+}
+
+function closeModal(e) { if (e.target === document.getElementById('edu-modal')) document.getElementById('edu-modal').classList.remove('open'); }
+
+// ===== DASHBOARD =====
+let dashData = { lastScore: null, lastCategory: 'Belum skrining', lastIMT: null, lastIMTCat: null, monitoring: [] };
+let dashChart = null;
+
+function saveMonitoring() {
+  const bb = parseFloat(document.getElementById('m-bb').value);
+  const tb = parseFloat(document.getElementById('m-tb').value);
+  if (!bb || !tb) { alert('Mohon isi berat badan dan tinggi badan.'); return; }
+  const imt = bb / ((tb / 100) ** 2);
+  const imtCat = imt < 18.5 ? 'Kurus' : imt < 23 ? 'Normal' : imt < 27.5 ? 'Kelebihan BB' : 'Obesitas';
+  const aktiv = document.getElementById('m-aktiv').value;
+  const makan = document.getElementById('m-makan').value;
+  const catatan = document.getElementById('m-catatan').value;
+  dashData.monitoring.unshift({ date: new Date().toLocaleDateString('id-ID'), bb, tb, imt: imt.toFixed(1), imtCat, aktiv, makan, catatan, score: dashData.lastScore });
+  dashData.lastIMT = imt.toFixed(1); dashData.lastIMTCat = imtCat;
+  ['m-bb','m-tb','m-catatan'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('m-aktiv').value = ''; document.getElementById('m-makan').value = '';
+  renderDashboard(); alert('✅ Data berhasil disimpan!');
+}
+
+function renderDashboard() {
+  document.getElementById('d-score').textContent = dashData.lastScore !== null ? dashData.lastScore : '–';
+  document.getElementById('d-cat').textContent = dashData.lastCategory;
+  document.getElementById('d-imt').textContent = dashData.lastIMT || '–';
+  document.getElementById('d-imt-cat').textContent = dashData.lastIMTCat || 'Belum dicatat';
+  document.getElementById('d-entries').textContent = dashData.monitoring.length;
+  const hist = document.getElementById('monitoring-history');
+  if (dashData.monitoring.length === 0) {
+    hist.innerHTML = '<p style="color:var(--text-muted);font-size:0.9rem;padding:16px 0">Belum ada catatan. Isi formulir di atas untuk mulai mencatat.</p>';
+  } else {
+    hist.innerHTML = `<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:0.85rem">
+      <thead><tr style="background:var(--primary-pale)">
+        <th style="padding:10px 12px;text-align:left;border-bottom:2px solid var(--border)">Tanggal</th>
+        <th style="padding:10px 12px;text-align:left;border-bottom:2px solid var(--border)">BB/TB</th>
+        <th style="padding:10px 12px;text-align:left;border-bottom:2px solid var(--border)">IMT</th>
+        <th style="padding:10px 12px;text-align:left;border-bottom:2px solid var(--border)">Aktivitas</th>
+        <th style="padding:10px 12px;text-align:left;border-bottom:2px solid var(--border)">Pola Makan</th>
+        <th style="padding:10px 12px;text-align:left;border-bottom:2px solid var(--border)">Catatan</th>
+      </tr></thead>
+      <tbody>${dashData.monitoring.map((m,i) => `
+        <tr style="border-bottom:1px solid var(--border);background:${i%2===0?'white':'var(--bg)'}">
+          <td style="padding:10px 12px">${m.date}</td>
+          <td style="padding:10px 12px">${m.bb} kg / ${m.tb} cm</td>
+          <td style="padding:10px 12px"><b style="color:var(--primary)">${m.imt}</b><br><small style="color:var(--text-muted)">${m.imtCat}</small></td>
+          <td style="padding:10px 12px">${m.aktiv||'–'}</td>
+          <td style="padding:10px 12px">${m.makan||'–'}</td>
+          <td style="padding:10px 12px">${m.catatan||'–'}</td>
+        </tr>`).join('')}
+      </tbody></table></div>`;
+  }
+  const labels = dashData.monitoring.slice(0,7).reverse().map(m => m.date);
+  const imtData = dashData.monitoring.slice(0,7).reverse().map(m => parseFloat(m.imt));
+  const ctx = document.getElementById('dash-chart').getContext('2d');
+  if (dashChart) dashChart.destroy();
+  if (imtData.length > 0) {
+    dashChart = new Chart(ctx, {
+      type: 'line',
+      data: { labels, datasets: [{ label: 'IMT', data: imtData, borderColor: '#0f5e4e', backgroundColor: 'rgba(15,94,78,0.07)', tension: 0.4, fill: true, pointRadius: 5, pointBackgroundColor: '#0f5e4e' }] },
+      options: { responsive: true, plugins: { legend: { display: true } }, scales: { y: { beginAtZero: false, grid: { color: '#e8f5f2' } }, x: { grid: { display: false } } } }
+    });
+  } else {
+    ctx.clearRect(0,0,ctx.canvas.width, ctx.canvas.height);
+    ctx.font = '14px Plus Jakarta Sans'; ctx.fillStyle = '#5a7a72'; ctx.textAlign = 'center';
+    ctx.fillText('Belum ada data. Catat monitoring pertama Anda!', ctx.canvas.width/2, 80);
+  }
+}
+
+// ===== CHATBOT =====
+const chatResponses = {
+  'diabetes': 'Diabetes Mellitus adalah penyakit metabolik kronis dengan kadar gula darah tinggi akibat gangguan insulin. Ada DM Tipe 1, Tipe 2 (paling umum ~90%), dan Gestasional. Indonesia punya ~19,5 juta penderita (IDF, 2021).',
+  'apa itu diabetes': 'Diabetes adalah kondisi di mana kadar glukosa darah terlalu tinggi karena tubuh tidak dapat memproduksi atau menggunakan insulin dengan efektif.',
+  'gejala': 'Gejala utama: 3P — Poliuria (sering BAK), Polidipsia (sering haus), Polifagia (sering lapar). Gejala lain: mudah lelah, luka sulit sembuh, penglihatan kabur. Segera periksa ke dokter jika ada gejala ini.',
+  'faktor risiko': 'Faktor risiko DM: usia ≥45 tahun, IMT ≥23, riwayat keluarga DM, kurang aktivitas fisik, pola makan tinggi gula/lemak, hipertensi, dan riwayat pre-diabetes.',
+  'pencegahan': 'Cara mencegah: (1) Jaga berat badan ideal, (2) Olahraga 150 menit/minggu, (3) Makan bergizi tinggi serat, (4) Kurangi gula, (5) Berhenti merokok, (6) Periksa gula darah rutin.',
+  'cara mencegah': 'Penelitian DPP membuktikan perubahan gaya hidup dapat mencegah diabetes hingga 58%! Kunci: turunkan BB 5–10%, olahraga rutin 150 menit/minggu, pola makan sehat.',
+  'imt': 'IMT = BB (kg) ÷ TB² (m). Untuk Asia (Indonesia): Normal: 18.5–22.9 | Kelebihan: 23–27.4 | Obesitas: ≥27.5. IMT ≥23 sudah meningkatkan risiko diabetes pada populasi Asia.',
+  'findrisc': 'FINDRISC adalah kuesioner 8 pertanyaan yang tervalidasi secara ilmiah untuk mengukur risiko DM dalam 10 tahun ke depan. Menilai usia, IMT, lingkar pinggang, aktivitas, pola makan, riwayat gula tinggi, obat hipertensi, dan riwayat keluarga. Skor 0–26.',
+  'pre diabetes': 'Pre-diabetes: gula darah di atas normal tapi belum DM. GDP 100–125 mg/dL atau HbA1c 5.7–6.4%. KONDISI INI MASIH BISA DIPERBAIKI dengan perubahan gaya hidup!',
+  'hba1c': 'HbA1c mencerminkan rata-rata gula darah 2–3 bulan terakhir. Normal: <5.7% | Pre-diabetes: 5.7–6.4% | Diabetes: ≥6.5%. Lebih akurat dari pemeriksaan sesaat.',
+  'olahraga': 'Olahraga untuk cegah DM: Aerobik (jalan cepat, bersepeda) minimal 150 menit/minggu + latihan kekuatan 2–3x/minggu. Meningkatkan sensitivitas insulin sel otot.',
+  'diet': 'Pola makan sehat: perbanyak sayuran, buah, biji-bijian, protein tanpa lemak. Batasi gula tambahan, minuman manis, karbohidrat olahan. Metode piring: ½ sayuran, ¼ protein, ¼ karbo kompleks.',
+  'default': 'Terima kasih sudah bertanya! 😊 Coba tanyakan tentang: gejala diabetes, faktor risiko, cara mencegah, olahraga, pola makan, IMT, FINDRISC, pre-diabetes, atau HbA1c. Kunjungi juga halaman Edukasi kami!'
+};
+
+function getChatResponse(msg) {
+  const lower = msg.toLowerCase();
+  for (const [key, val] of Object.entries(chatResponses)) { if (lower.includes(key)) return val; }
+  return chatResponses['default'];
+}
+
+function addMsg(text, isUser) {
+  const msgs = document.getElementById('chat-msgs');
+  const div = document.createElement('div');
+  div.className = 'msg ' + (isUser ? 'msg-user' : 'msg-bot');
+  div.innerHTML = `<div class="msg-bubble">${text}</div>`;
+  msgs.appendChild(div); msgs.scrollTop = msgs.scrollHeight;
+}
+
+function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim(); if (!msg) return;
+  addMsg(msg, true); input.value = '';
+  setTimeout(() => addMsg(getChatResponse(msg), false), 500);
+}
+
+function sendQuick(msg) { addMsg(msg, true); setTimeout(() => addMsg(getChatResponse(msg), false), 500); }
+function toggleChat() { document.getElementById('chat-window').classList.toggle('open'); }
+
+// ===== INIT =====
+renderEdu(eduArticles);
+initSkrining();
+renderDashboard();
+</script>
+</body>
+</html>
